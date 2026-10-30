@@ -570,6 +570,20 @@ def test_compiler_error():
             del os.environ["CXX"]
 
 
+@pytest.mark.codegen_independent
+def test_cython_compile_error():
+    # See github issue #1898
+    pytest.importorskip("Cython")
+    from brian2.codegen.runtime.cython_rt.extension_manager import (
+        cython_extension_manager,
+    )
+
+    with pytest.raises(RuntimeError, match="Compilation of the Cython module"):
+        cython_extension_manager.create_extension(
+            "def main():\n    cdef int x = 'not an int'\n"
+        )
+
+
 def test_compiler_c99():
     # On a user's computer, we do not know whether the compiler actually
     # has C99 support, so we just check whether the test does not raise an

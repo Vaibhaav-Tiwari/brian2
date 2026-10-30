@@ -343,8 +343,11 @@ class CythonExtensionManager:
                                 f" {str(ex)}"
                             )
 
-            except Cython_Compiler.Errors.CompileError:
-                return
+            except Cython_Compiler.Errors.CompileError as ex:
+                raise RuntimeError(
+                    f"Compilation of the Cython module '{module_name}' failed, see "
+                    "the error message above for details."
+                ) from ex
         # Temporarily insert the Cython directory to the Python path so that
         # code importing from an external module that was declared via
         # sources works
